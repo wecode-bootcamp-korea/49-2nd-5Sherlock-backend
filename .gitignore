@@ -1,0 +1,4 @@
+.env
+db/schema.sql
+
+node_modules
