@@ -7,13 +7,13 @@ const signIn = async (req, res) => {
     res.status(200).json({
       message: "signInSuccess",
       data: {
-        token: token
+        token: token,
       },
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(error.status || 400).json({
-      message: error.message
+      message: error.message,
     });
   }
 };

@@ -6,7 +6,6 @@ function checkEmptyValues() {
   }
 }
 
-
 module.exports = {
   checkEmptyValues,
 };

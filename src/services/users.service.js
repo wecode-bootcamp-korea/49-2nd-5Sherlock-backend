@@ -1,5 +1,9 @@
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
-const {checkExistingUser, checkCorrectPassword, generateToken} = require("./usersUtils/users.util");
+const {
+  checkExistingUser,
+  checkCorrectPassword,
+  generateToken,
+} = require("./usersUtils/users.util");
 
 const signIn = async (email, password) => {
   checkEmptyValues(email, password);
