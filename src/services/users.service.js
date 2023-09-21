@@ -1,6 +1,6 @@
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
 const {
-  checkExistingUser,
+  checkExistingUserByEmail,
   checkCorrectPassword,
   generateToken,
 } = require("./usersUtils/users.util");
@@ -8,7 +8,7 @@ const {
 const signIn = async (email, password) => {
   checkEmptyValues(email, password);
 
-  const user = await checkExistingUser(email);
+  const user = await checkExistingUserByEmail(email);
 
   await checkCorrectPassword(user.password, password);
 
