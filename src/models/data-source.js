@@ -1,3 +1,4 @@
+
 const { DataSource } = require("typeorm");
 
 const AppDataSource = new DataSource({
@@ -16,3 +17,4 @@ AppDataSource.initialize().then(() => {
 module.exports = {
   AppDataSource,
 };
+
