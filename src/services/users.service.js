@@ -24,7 +24,8 @@ const signUp = async (name, email, password, phoneNumber) => {
     }
     //existingUser 선언 후 값 넣기
     const existingUser = await usersModel.getUserByEmail(email);
-    if (!existingUser.id) {
+    
+    if (existingUser) {
       const error = new Error("DUPLICATED_EMAIL_ADDRESS");
       error.statusCode = 400;
       throw error;
@@ -62,8 +63,9 @@ const signIn = async (email, password) => {
   checkEmptyValues(email, password);
 
   const user = await checkExistingUser(email);
+  console.log(user);
 
-  await checkCorrectPassword(user.password, password);
+  await checkCorrectPassword(password, user.password);
 
   return generateToken(user.id);
 };
