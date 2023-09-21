@@ -1,11 +1,17 @@
-const { usersModel } = require("../models");
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-require("dotenv").config();
+const { checkEmptyValues } = require("../utils/checkEmptyValues");
+const {
+  checkExistingUser,
+  checkCorrectPassword,
+  generateToken,
+} = require("./usersUtils/users.util");
+const { usersModel } = require("../models");
 
 const signUp = async (name, email, password, phoneNumber) => {
-  
+
   if (
     name === undefined ||
     email === undefined ||
@@ -18,7 +24,7 @@ const signUp = async (name, email, password, phoneNumber) => {
     }
     //existingUser 선언 후 값 넣기
     const existingUser = await usersModel.getUserByEmail(email);
-    if (existingUser.length > 0) {
+    if (!existingUser.id) {
       const error = new Error("DUPLICATED_EMAIL_ADDRESS");
       error.statusCode = 400;
       throw error;
@@ -51,8 +57,19 @@ const signUp = async (name, email, password, phoneNumber) => {
       phoneNumber
     );
   };
-  
-  module.exports = {
-    signUp,
-  };
+
+const signIn = async (email, password) => {
+  checkEmptyValues(email, password);
+
+  const user = await checkExistingUser(email);
+
+  await checkCorrectPassword(user.password, password);
+
+  return generateToken(user.id);
+};
+
+module.exports = {
+  signIn,
+  signUp,
+};
   

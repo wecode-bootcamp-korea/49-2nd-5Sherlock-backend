@@ -1,11 +1,5 @@
 const { AppDataSource } = require("./data-source");
 
-const getUserByEmail = async (email) => {
-  const existingUser = await AppDataSource.query(`
-  SELECT id, email FROM users WHERE email='${email}';   
-  `);
-  return existingUser;
-};
 
 const createUser = async (name, email, hashedPw, phoneNumber) => {
   await AppDataSource.query(`
@@ -23,6 +17,21 @@ const createUser = async (name, email, hashedPw, phoneNumber) => {
   )
 `);
 };
+
+
+async function getUserByEmail(email) {
+  const users = await AppDataSource.query(`
+    SELECT
+      email,
+      pw AS password
+    FROM
+      users
+    WHERE
+      email = "${email}"
+    ;
+  `);
+  return users[0];
+}
 
 module.exports = {
   createUser,

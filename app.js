@@ -1,18 +1,18 @@
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan")
-
+const morgan = require("morgan");
 require("dotenv").config();
-const {router} = require("./src/routes");
+
+const { router } = require("./src/routes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use(morgan("combined"))
 
+app.use(morgan("combined"));
 app.use(router);
 
 app.get("/", async (req, res) => {
@@ -23,6 +23,7 @@ app.get("/", async (req, res) => {
   }
 });
 const server = http.createServer(app);
+
 const portNumber = process.env.PORT || 8000;
 const start = async () => {
   try {
