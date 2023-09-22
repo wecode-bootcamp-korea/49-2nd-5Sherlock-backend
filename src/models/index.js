@@ -1,3 +1,8 @@
 const productModel = require("./product.model");
+const usersModel = require("./users.model");
 
-module.exports = { productModel };
+module.exports = {
+  usersModel,
+  productModel,
+};
+
