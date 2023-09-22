@@ -10,6 +10,14 @@ const createLike = async (userId, productId) => {
   `);
 };
 
+const deleteLike = async (userId, productId) => {
+  await AppDataSource.query(`
+  DELETE FROM likes
+  WHERE user_id = '${userId}' AND product_id = '${productId}'
+  ;
+  `);
+};
+
 const getLikeByIds = async (userId, productId) => {
   const likes = await AppDataSource.query(`
     SELECT
@@ -26,4 +34,5 @@ const getLikeByIds = async (userId, productId) => {
 module.exports = {
   createLike,
   getLikeByIds,
+  deleteLike,
 };
