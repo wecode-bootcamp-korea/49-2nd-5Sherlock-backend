@@ -37,25 +37,72 @@ app.get("/", async (req, res) => {
 
 
 
-app.get("/products/:product_id", async (req, res) => {
-  try {
-    // 요청 온 걸 확인하고 productID를 꺼낸다
-    const params = req.params;
-    const productId = params.product_id;
-    console.log(productId, "productId")
 
-    // 데이터베이스에 있는 데이터를 선택해서 데이터라는 변수에 저장한다 
-    const data = await AppDataSource.query(`SELECT * FROM products WHERE id=${productId};`);
-    console.log(data, "productdata")
+const controller = async (req, res) => {
+  const params = req.params;
+  const productId = params.product_id;
+  console.log(productId, "productId")
 
-    // 데이터를 넣어서 응답한다 
-    return res.status(200).json({ data });
-  } catch (err) {
-    console.log(err);
-  }
-});
+  const data = await service(productId);
+
+  return res.status(200).json({ data });
+
+}
+
+app.get("/products/:product_id", controller);
+
+const service = async (productId) => {
+    if (!productId) {
+      throw new Error("input이 없습니다");
+    }
+
+const data = await model(productId);
+return data;
+}
+
+const model = async (productId) => {
+  const data = await AppDataSource.query(`SELECT * FROM products WHERE id=${productId};`);
+  console.log(data, "productdata")
+
+  return data;
+}
 
 
+
+
+// const controller = async (req, res) => { 
+//   // 요청 온 걸 확인하고 productID를 꺼낸다
+//   const params = req.params;
+//   const productId = params.product_id;
+//   console.log(productId, "productId")
+  
+//   // 서비스한테 추가 작업 요청 
+//   const data = await service(productId);
+  
+//   // 데이터를 넣어서 응답한다 
+//   return res.status(200).json({ data });
+  
+// }
+
+// app.get("/products/:product_id", controller); 
+
+// const service = async (productId) => {
+  
+//   if (!productId) {
+//   throw new Error("input이 없습니다");
+// } 
+
+// const data = await model(productId);
+// return data;
+// }
+
+// const model = async (productId) => {
+//   // 데이터베이스에 있는 데이터를 선택해서 저장한다 
+//   const data = await AppDataSource.query(`SELECT * FROM products WHERE id=${productId};`);
+//   console.log(data, "productdata")
+
+//   return data;
+// }
 
 
 
