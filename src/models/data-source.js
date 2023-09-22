@@ -16,3 +16,4 @@ AppDataSource.initialize().then(() => {
 module.exports = {
   AppDataSource,
 };
+
