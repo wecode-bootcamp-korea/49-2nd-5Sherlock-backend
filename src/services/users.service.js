@@ -37,11 +37,11 @@ const signUp = async (name, email, password, phoneNumber) => {
       throw error;
     }
     
-    if (password.length < 10) {
+    if (!/^[.@!#$%&'*+-/=?^_`{|}~\w\d]{9,}$/.test(password)) {
       const error = new Error("INVALID_PASSWORD");
       error.statusCode = 400;
       throw error;
-    }
+      }
     
     if (!/^01\d{9,10}$/.test(phoneNumber)) {
       const error = new Error("INVALID_INPUT");
