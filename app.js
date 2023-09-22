@@ -25,9 +25,6 @@ app.get("/", async (req, res) => {
 app.get("/products/:product_id", async (req, res) => {
   try {
     // 요청 온 걸 확인하고 productID를 꺼낸다
-    const params = req.params;
-    const productId = params.product_id;
-    console.log(productId, "productId")
     // ============================= CONTROLLER
 
     // 데이터베이스에 있는 데이터를 선택해서 데이터라는 변수에 저장한다 
@@ -36,7 +33,6 @@ app.get("/products/:product_id", async (req, res) => {
     // ============================= MODELS
 
     // 데이터를 넣어서 응답한다 
-    return res.status(200).json({ data });
     // ============================= CONTROLLER
   } catch (err) {
     console.log(err);

@@ -24,7 +24,13 @@ const getTotalProduct = async (req, res) => {
   return product;
 };
 
+const getProductDetail = async (productId) => {
+  const data = await productModel.getProductDetail(productId)
+  return data
+}
+
 module.exports = {
   getProductList,
   getTotalProduct,
+  getProductDetail
 };

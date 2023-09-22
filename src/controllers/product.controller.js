@@ -24,8 +24,22 @@ const getProduct = async (req, res) => {
   }
 };
 
+const getProductDetail = async (req, res) => {
+  try {
+    console.log('Controller connect')
+    const params = req.params;
+    const productId = params.product_id;
+    console.log(productId, "productId")
 
+    const data = productService.getProductDetail(productId)
+
+    return res.status(200).json({ data });
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 module.exports = {
   getProduct,
+  getProductDetail
 };
