@@ -1,6 +1,7 @@
 const { AppDataSource } = require("./data-source");
 
 const productList = async (userId) => {
+  // , userId, page, sort, category
   let input = 0;
   if (userId) {
     input = userId;
@@ -31,11 +32,34 @@ const productList = async (userId) => {
     LEFT JOIN (SELECT user_id, product_id FROM likes WHERE user_id = ${input}) liked ON products.id = liked.product_id
     `;
 
-  // if (conditinos) {
-  //   query = query + "";
+  // if (queryParams.page) {
+  //    query += + "";
+  // }
+  // Object.keys(queryParams)
+  //
+  // Object.entries(queryParams).map((key, value) => {
+  //   if (key === "orderBy") {
+  //     query += ` ORDER BY ${value}`;
+  //   }
+  //   if (key === "page") {
+  //     query += ` LIMIT 12 OFFSET ${(page - 1) * 24}`;
+  //   }
+  // });
+  // [(key, value), (key, value)]
+
+  // if (category) {
+  //   query += +"";
   // }
 
-  query = query + "GROUP BY products.id";
+  // if (sort) {
+  //   query += +"";
+  // }
+
+  // if (page) {
+  //   query += +"";
+  // }
+
+  query += "GROUP BY products.id";
 
   const product = await AppDataSource.query(query);
 

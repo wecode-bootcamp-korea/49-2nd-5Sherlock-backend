@@ -9,14 +9,6 @@ const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
 });
 
-// const dataSource = {
-//     host: "localhost",
-//     username: "root",
-//     initialize: () => {
-//         // connect to database
-//     }
-// }
-
 AppDataSource.initialize().then(() => {
   console.log("Data Source has been initialized!");
 });
