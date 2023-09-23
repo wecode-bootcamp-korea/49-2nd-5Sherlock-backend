@@ -1,8 +1,8 @@
-const productModel = require("./product.model");
+const productModel = require("./products.model");
 const usersModel = require("./users.model");
-
+const builder = require("./builder");
 module.exports = {
   usersModel,
   productModel,
+  builder,
 };
-

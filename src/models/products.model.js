@@ -1,7 +1,13 @@
 const { AppDataSource } = require("./data-source");
 
-const productList = async (userId) => {
-  // , userId, page, sort, category
+const productList = async (
+  userId,
+  teasort,
+  offset,
+  limit,
+  categorizingQuery,
+  orderingQuery
+) => {
   let input = 0;
   if (userId) {
     input = userId;
@@ -22,66 +28,63 @@ const productList = async (userId) => {
     COUNT(likes.product_id) AS likeNumber,
     COUNT(reviews.product_id) AS reviewNumber,
     IF(DATEDIFF(NOW(),products.created_at) < 30, "true", "false") AS isNew,
-    IF(liked.user_id="1" || liked.user_id= 1, "true", "false") AS isLike,
-    products.quantity AS quantity
+    IF(liked.user_id='${input}'|| liked.user_id= ${input}, "true", "false") AS isLike,
+    products.quantity AS quantity,
+    IFNULL(SUM(reviews.rating), 0) AS rating
     FROM products
     LEFT JOIN categories ON products.category_id = categories.id
     LEFT JOIN likes ON products.id = likes.product_id
     LEFT JOIN reviews ON products.id = reviews.product_id
     LEFT JOIN product_images ON product_images.product_id = products.id
     LEFT JOIN (SELECT user_id, product_id FROM likes WHERE user_id = ${input}) liked ON products.id = liked.product_id
-    `;
+    LEFT JOIN product_types ON products.product_type_id = product_types.id `;
 
-  // if (queryParams.page) {
-  //    query += + "";
-  // }
-  // Object.keys(queryParams)
-  //
-  // Object.entries(queryParams).map((key, value) => {
-  //   if (key === "orderBy") {
-  //     query += ` ORDER BY ${value}`;
-  //   }
-  //   if (key === "page") {
-  //     query += ` LIMIT 12 OFFSET ${(page - 1) * 24}`;
-  //   }
-  // });
-  // [(key, value), (key, value)]
+  query += categorizingQuery;
 
-  // if (category) {
-  //   query += +"";
-  // }
+  if (teasort) {
+    const teasorting = teasort.split(",").map((tea) => parseInt(tea));
+    query += ` AND products.product_type_id IN (${teasorting.join(",")})`;
+  }
 
-  // if (sort) {
-  //   query += +"";
-  // }
+  if (!teasort) {
+    query += ` AND (products.product_type_id IN (1, 2, 3, 4) OR products.product_type_id IS NULL OR products.product_type_id = '')`;
+  }
 
-  // if (page) {
-  //   query += +"";
-  // }
+  query += `
+      GROUP BY products.id
 
-  query += "GROUP BY products.id";
-
+      ${orderingQuery}
+      LIMIT ${limit} OFFSET ${offset}`;
   const product = await AppDataSource.query(query);
-
   product.forEach((item) => {
     item.likeNumber = parseInt(item.likeNumber);
     item.reviewNumber = parseInt(item.reviewNumber);
     item.isNew = item.isNew === "true";
     item.isLike = item.isLike === "true";
+    item.rating = item.reviewNumber > 0 ? item.rating / item.reviewNumber : 0;
   });
 
   return product;
 };
 
-const totalProduct = async () => {
-  let product = await AppDataSource.query(`SELECT COUNT(*) AS product_count
-  FROM products;`);
-  console.log(product);
+const totalProduct = async (categorizingQuery, teasort) => {
+  let query = `SELECT products.id FROM products
+    LEFT JOIN categories ON products.category_id = categories.id
+    LEFT JOIN product_types ON products.product_type_id = product_types.id`;
 
-  product.forEach((item) => {
-    item.product_count = parseInt(item.product_count);
-  });
-  return product;
+  query += categorizingQuery;
+  if (teasort) {
+    const teasorting = teasort.split(",").map((cat) => parseInt(cat)); // 쉼표로 구분된 카테고리를 배열로 분할
+    query += ` AND products.product_type_id IN (${teasorting.join(",")})`;
+  }
+
+  if (!teasort) {
+    // teasort 값이 없는 경우 모든 값을 가져오며, 비어있는 category_id도 포함
+    query += ` AND (products.product_type_id IN (1, 2, 3, 4) OR products.product_type_id IS NULL OR products.product_type_id = '')`;
+  }
+  console.log(query);
+  const product = await AppDataSource.query(query);
+  return product.length;
 };
 
 module.exports = {

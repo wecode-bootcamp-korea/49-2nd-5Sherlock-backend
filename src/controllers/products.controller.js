@@ -2,21 +2,33 @@ const { productService } = require("../services");
 
 const getProduct = async (req, res) => {
   try {
-    // const { page, sort, category } = req.query;
-    // console.log(queryParams);
-    // console.log(Object.entries(queryParams));
+    let {
+      category,
+      sort = "rating",
+      teasort,
+      offset = 0,
+      limit = 12,
+    } = req.query;
     const userId = req.user_id;
+    console.log(userId, category, sort, offset, limit, teasort);
     const productList = await productService.getProductList(
-      userId
-      // page,
-      // sort,
-      // category
+      userId,
+      category,
+      sort,
+      teasort,
+      offset,
+      limit
     );
-    const totalProduct = await productService.getTotalProduct();
+
+    const totalProduct = await productService.getTotalProduct(
+      category,
+      teasort
+    );
+
     res.status(200).json({
       message: "querySuccess",
       data: productList,
-      productCount: totalProduct[0].product_count,
+      productCount: totalProduct,
     });
   } catch (error) {
     console.log("error", error);
