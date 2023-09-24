@@ -1,8 +1,7 @@
 const { AppDataSource } = require("./data-source");
 
 const categorizing = async (category) => {
-  if (category) {
-    // category가 숫자인 경우
+  if (!isNaN(category)) {
     return ` WHERE products.category_id=${category}`;
   }
 

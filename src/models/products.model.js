@@ -55,6 +55,8 @@ const productList = async (
 
       ${orderingQuery}
       LIMIT ${limit} OFFSET ${offset}`;
+
+  console.log(query);
   const product = await AppDataSource.query(query);
   product.forEach((item) => {
     item.likeNumber = parseInt(item.likeNumber);
