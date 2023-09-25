@@ -26,7 +26,22 @@ const deleteLike = async (req, res) => {
   }
 };
 
+const getReviews = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const reviews = await productsService.getReviews(productId);
+    res.status(200).json({
+      message: "querySuccess",
+      data: reviews,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(error.status).json({message: error.message});
+  }
+};
+
 module.exports = {
   createLike,
   deleteLike,
+  getReviews,
 };

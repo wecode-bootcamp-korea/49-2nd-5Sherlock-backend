@@ -6,6 +6,7 @@ const productsRouter = express.Router();
 
 productsRouter.post("/:productId/likes", productsController.createLike);
 productsRouter.delete("/:productId/likes", productsController.deleteLike);
+productsRouter.get("/:productId/reviews", productsController.getReviews);
 
 module.exports = {
   productsRouter,
