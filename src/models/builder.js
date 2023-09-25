@@ -18,13 +18,13 @@ const categorizing = async (category) => {
 };
 const ordering = async (sort) => {
   switch (sort) {
-    case "priceASC":
+    case "-price":
       return ` ORDER BY price ASC, products.id ASC`;
-    case "priceDESC":
+    case "price":
       return ` ORDER BY price DESC, products.id ASC`;
     case "review":
       return ` ORDER BY islike ASC, products.id ASC`;
-    case "newest":
+    case "created_at":
       return ` ORDER BY products.created_at DESC, products.id ASC`;
     case "rating":
       return ` ORDER BY rating DESC, products.id ASC`;

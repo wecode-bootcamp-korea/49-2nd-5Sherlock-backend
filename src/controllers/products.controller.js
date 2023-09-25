@@ -5,24 +5,24 @@ const getProduct = async (req, res) => {
     let {
       category,
       sort = "rating",
-      teasort,
+      product_type,
       offset = 0,
       limit = 12,
     } = req.query;
     const userId = req.user_id;
-    console.log(userId, category, sort, offset, limit, teasort);
+    console.log(userId, category, sort, offset, limit, product_type);
     const productList = await productService.getProductList(
       userId,
       category,
       sort,
-      teasort,
+      product_type,
       offset,
       limit
     );
 
     const totalProduct = await productService.getTotalProduct(
       category,
-      teasort
+      product_type
     );
 
     res.status(200).json({
@@ -36,6 +36,15 @@ const getProduct = async (req, res) => {
   }
 };
 
+const getBestProduct = async (req, res) => {
+  try {
+  } catch (error) {
+    console.log("error", error);
+    res.status(error.status).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getProduct,
+  getBestProduct,
 };

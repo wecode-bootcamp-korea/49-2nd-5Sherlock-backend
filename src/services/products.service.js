@@ -4,7 +4,7 @@ const getProductList = async (
   userId,
   category,
   sort,
-  teasort,
+  product_type,
   offset,
   limit
 ) => {
@@ -13,7 +13,7 @@ const getProductList = async (
   const categorizingQuery = await builder.categorizing(category);
   const product = await productModel.productList(
     userId,
-    teasort,
+    product_type,
     offset,
     limit,
     categorizingQuery,
@@ -23,9 +23,12 @@ const getProductList = async (
   return product;
 };
 
-const getTotalProduct = async (category, teasort) => {
+const getTotalProduct = async (category, product_type) => {
   const categorizingQuery = await builder.categorizing(category);
-  const product = await productModel.totalProduct(categorizingQuery, teasort);
+  const product = await productModel.totalProduct(
+    categorizingQuery,
+    product_type
+  );
 
   return product;
 };

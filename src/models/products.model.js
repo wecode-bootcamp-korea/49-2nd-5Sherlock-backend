@@ -2,7 +2,7 @@ const { AppDataSource } = require("./data-source");
 
 const productList = async (
   userId,
-  teasort,
+  product_type,
   offset,
   limit,
   categorizingQuery,
@@ -41,22 +41,21 @@ const productList = async (
 
   query += categorizingQuery;
 
-  if (teasort) {
-    const teasorting = teasort.split(",").map((tea) => parseInt(tea));
+  if (product_type) {
+    const teasorting = product_type.split(",").map((cat) => parseInt(cat)); // 쉼표로 구분된 카테고리를 배열로 분할
     query += ` AND products.product_type_id IN (${teasorting.join(",")})`;
   }
 
-  if (!teasort) {
+  if (!product_type) {
     query += ` AND (products.product_type_id IN (1, 2, 3, 4) OR products.product_type_id IS NULL OR products.product_type_id = '')`;
   }
 
   query += `
       GROUP BY products.id
-
       ${orderingQuery}
       LIMIT ${limit} OFFSET ${offset}`;
 
-  console.log(query);
+  // console.log(query);
   const product = await AppDataSource.query(query);
   product.forEach((item) => {
     item.likeNumber = parseInt(item.likeNumber);
@@ -69,22 +68,22 @@ const productList = async (
   return product;
 };
 
-const totalProduct = async (categorizingQuery, teasort) => {
+const totalProduct = async (categorizingQuery, product_type) => {
   let query = `SELECT products.id FROM products
     LEFT JOIN categories ON products.category_id = categories.id
     LEFT JOIN product_types ON products.product_type_id = product_types.id`;
 
   query += categorizingQuery;
-  if (teasort) {
-    const teasorting = teasort.split(",").map((cat) => parseInt(cat)); // 쉼표로 구분된 카테고리를 배열로 분할
+  if (product_type) {
+    const teasorting = product_type.split(",").map((cat) => parseInt(cat)); // 쉼표로 구분된 카테고리를 배열로 분할
     query += ` AND products.product_type_id IN (${teasorting.join(",")})`;
   }
 
-  if (!teasort) {
+  if (!product_type) {
     // teasort 값이 없는 경우 모든 값을 가져오며, 비어있는 category_id도 포함
     query += ` AND (products.product_type_id IN (1, 2, 3, 4) OR products.product_type_id IS NULL OR products.product_type_id = '')`;
   }
-  console.log(query);
+  // console.log(query);
   const product = await AppDataSource.query(query);
   return product.length;
 };
