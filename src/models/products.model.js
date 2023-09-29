@@ -16,28 +16,38 @@ const productList = async (
     products.id AS id,
     products.name AS name,
     categories.name AS category,
-    JSON_ARRAYAGG(
-      JSON_OBJECT(
-          "id", product_images.order,
-          "url", product_images.url
-      ) 
+    (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                "id", product_images.order,
+                "url", product_images.url
+            )
+        )
+        FROM product_images
+        WHERE product_images.product_id = products.id
     ) AS productImg,
     products.price - (products.price * (products.discount_rate / 100)) AS price,
     products.price AS originalPrice,
     products.discount_rate AS discountRate,
     COUNT(likes.product_id) AS likeNumber,
-    COUNT(reviews.product_id) AS reviewNumber,
-    IF(DATEDIFF(NOW(),products.created_at) < 30, "true", "false") AS isNew,
-    IF(liked.user_id='${input}'|| liked.user_id= ${input}, "true", "false") AS isLike,
+    (
+        SELECT COUNT(reviews.product_id)
+        FROM reviews
+        WHERE reviews.product_id = products.id
+    ) AS reviewNumber,
+    IF(DATEDIFF(NOW(), products.created_at) < 30, "true", "false") AS isNew,
+    IF(likes.user_id = ${input}, "true", "false") AS isLike,
     products.quantity AS quantity,
-    IFNULL(SUM(reviews.rating), 0) AS rating
+    IFNULL((
+      SELECT IFNULL(SUM(reviews.rating), 0) / IFNULL(COUNT(reviews.product_id), 1)
+      FROM reviews
+      WHERE reviews.product_id = products.id
+  ), 0) AS rating
     FROM products
     LEFT JOIN categories ON products.category_id = categories.id
-    LEFT JOIN likes ON products.id = likes.product_id
-    LEFT JOIN reviews ON products.id = reviews.product_id
     LEFT JOIN product_images ON product_images.product_id = products.id
-    LEFT JOIN (SELECT user_id, product_id FROM likes WHERE user_id = ${input}) liked ON products.id = liked.product_id
-    LEFT JOIN product_types ON products.product_type_id = product_types.id `;
+    LEFT JOIN likes ON products.id = likes.product_id AND likes.user_id = ${input}
+    LEFT JOIN product_types ON products.product_type_id = product_types.id`;
 
   query += categorizingQuery;
 
@@ -51,19 +61,11 @@ const productList = async (
   }
 
   query += `
-      GROUP BY products.id
-      ${orderingQuery}
-      LIMIT ${limit} OFFSET ${offset}`;
+    GROUP BY products.id
+    ${orderingQuery}
+    LIMIT ${limit} OFFSET ${offset}`;
 
-  // console.log(query);
   const product = await AppDataSource.query(query);
-  product.forEach((item) => {
-    item.likeNumber = parseInt(item.likeNumber);
-    item.reviewNumber = parseInt(item.reviewNumber);
-    item.isNew = item.isNew === "true";
-    item.isLike = item.isLike === "true";
-    item.rating = item.reviewNumber > 0 ? item.rating / item.reviewNumber : 0;
-  });
 
   return product;
 };
@@ -88,14 +90,67 @@ const totalProduct = async (categorizingQuery, product_type) => {
   return product.length;
 };
 
+const getBestProduct = async (category, orderingQuery) => {
+  console.log(category);
+  let query = `SELECT
+    products.id AS id,
+    (
+      SELECT JSON_ARRAYAGG(
+          JSON_OBJECT(
+              "id", product_images.order,
+              "url", product_images.url
+          )
+      )
+      FROM product_images
+      WHERE product_images.product_id = products.id
+    ) AS productImg,
+    (
+      SELECT COUNT(reviews.product_id)
+      FROM reviews
+      WHERE reviews.product_id = products.id
+  ) AS reviewNumber,
+    products.price - (products.price * (products.discount_rate / 100)) AS price,
+    products.price AS originalPrice,
+    products.discount_rate AS discountRate,
+    IFNULL(
+      IFNULL(SUM(reviews.rating), 0) / IFNULL(COUNT(reviews.product_id), 1),
+      0
+    ) AS rating,
+    products.quantity AS quantity
+    FROM products
+    LEFT JOIN product_images ON product_images.product_id = products.id
+    LEFT JOIN reviews ON reviews.product_id=products.id`;
+
+  if (!isNaN(parseInt(category))) {
+    console.log("category");
+    query += `
+    WHERE quantity > 0
+    GROUP BY products.id
+    ORDER BY reviewNumber ASC, products.id ASC;
+    offset 0 limit 12;`;
+  } else {
+    console.log("!category");
+    query += `
+    WHERE WEEK(reviews.created_at) = WEEK(CURDATE()) AND quantity > 0
+    GROUP BY products.id
+    ${orderingQuery}
+    limit 12 offset 0;`;
+  }
+
+  const product = await AppDataSource.query(query);
+
+  return product;
+};
+
 module.exports = {
   productList,
   totalProduct,
+  getBestProduct,
 };
 
 /*[
     {
-      id: 1,
+      id: 1,n
       productImg = {
         picFirst:
         'https://image.osulloc.com/upload/kr/ko/adminImage/NK/UF/304_20221114150238508QK.png',

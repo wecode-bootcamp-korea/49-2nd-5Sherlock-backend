@@ -23,7 +23,7 @@ const ordering = async (sort) => {
     case "price":
       return ` ORDER BY price DESC, products.id ASC`;
     case "review":
-      return ` ORDER BY islike ASC, products.id ASC`;
+      return ` ORDER BY reviewNumber DESC, products.id ASC`;
     case "created_at":
       return ` ORDER BY products.created_at DESC, products.id ASC`;
     case "rating":

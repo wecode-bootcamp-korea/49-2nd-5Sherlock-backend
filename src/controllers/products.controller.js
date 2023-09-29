@@ -1,4 +1,4 @@
-const { productService } = require("../services");
+const { productsService } = require("../services");
 
 const getProduct = async (req, res) => {
   try {
@@ -9,9 +9,9 @@ const getProduct = async (req, res) => {
       offset = 0,
       limit = 12,
     } = req.query;
-    const userId = req.user_id;
+    const userId = req.userId;
     console.log(userId, category, sort, offset, limit, product_type);
-    const productList = await productService.getProductList(
+    const productList = await productsService.getProductList(
       userId,
       category,
       sort,
@@ -20,7 +20,7 @@ const getProduct = async (req, res) => {
       limit
     );
 
-    const totalProduct = await productService.getTotalProduct(
+    const totalProduct = await productsService.getTotalProduct(
       category,
       product_type
     );
@@ -38,6 +38,12 @@ const getProduct = async (req, res) => {
 
 const getBestProduct = async (req, res) => {
   try {
+    const { category, sort } = req.query;
+    const bestProduct = await productsService.getBestProduct(category, sort);
+    res.status(200).json({
+      message: "Success",
+      data: bestProduct,
+    });
   } catch (error) {
     console.log("error", error);
     res.status(error.status).json({ message: error.message });
