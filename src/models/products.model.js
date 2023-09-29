@@ -126,8 +126,8 @@ const getBestProduct = async (category, orderingQuery) => {
     query += `
     WHERE quantity > 0
     GROUP BY products.id
-    ORDER BY reviewNumber ASC, products.id ASC;
-    offset 0 limit 12;`;
+    ORDER BY reviewNumber DESC, products.id ASC
+    limit 12 offset 0;`;
   } else {
     console.log("!category");
     query += `
@@ -137,6 +137,7 @@ const getBestProduct = async (category, orderingQuery) => {
     limit 12 offset 0;`;
   }
 
+  console.log(query);
   const product = await AppDataSource.query(query);
 
   return product;
