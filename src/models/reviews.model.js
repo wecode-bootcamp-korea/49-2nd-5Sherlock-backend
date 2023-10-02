@@ -6,6 +6,7 @@ const getReviewsByProductId = async (productId) => {
       reviews.id,
       reviews.content,
       reviews.rating,
+      review_images.url,
       reviews.created_at AS createdAt,
       reviews.updated_at AS updatedAt,
       reviews.author_id AS authorId,
@@ -13,6 +14,7 @@ const getReviewsByProductId = async (productId) => {
     FROM 
       reviews
     LEFT JOIN users ON reviews.author_id = users.id
+    LEFT JOIN review_images ON reviews.id = review_images.review_id
     WHERE reviews.product_id = ${productId}
     ORDER BY reviews.created_at DESC
   ;`);
