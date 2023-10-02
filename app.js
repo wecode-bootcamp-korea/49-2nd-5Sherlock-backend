@@ -5,26 +5,17 @@ const morgan = require("morgan")
 
 require("dotenv").config();
 
-const { DataSource } = require("typeorm");
 
-const AppDataSource = new DataSource({
-    type: process.env.DB_CONNECTION,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-});
+const { router } = require("./src/routes");
 
-AppDataSource.initialize().then(() => {
-    console.log("Data Source has been initialized_userServices!");
-});
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.use(morgan("combined"))
+
+app.use(router);
 
 app.get("/", async (req, res) => {
   try {
@@ -37,35 +28,10 @@ app.get("/", async (req, res) => {
 
 
 
+// const controllerFile = require("./src/controllers/products.controller")
 
-const controller = async (req, res) => {
-  const params = req.params;
-  const productId = params.product_id;
-  console.log(productId, "productId")
+// app.get("/products/:product_id", controllerFile.controller);
 
-  const data = await service(productId);
-
-  return res.status(200).json({ data });
-
-}
-
-app.get("/products/:product_id", controller);
-
-const service = async (productId) => {
-    if (!productId) {
-      throw new Error("input이 없습니다");
-    }
-
-const data = await model(productId);
-return data;
-}
-
-const model = async (productId) => {
-  const data = await AppDataSource.query(`SELECT * FROM products WHERE id=${productId};`);
-  console.log(data, "productdata")
-
-  return data;
-}
 
 
 
