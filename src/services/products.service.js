@@ -1,8 +1,16 @@
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
 const { checkExistingUserById } = require("./usersUtils/users.util");
 const { checkExistingProductById, checkExistingLike } = require("./productsUtils/products.util");
-const {likesModel} = require("../models");
+const {likesModel, productsModel} = require("../models");
 
+const getProductDetail = async (productId) => {
+    if (!productId) {
+        throwError(400, "KEY_ERROR");
+    }
+
+    const data = await productsModel.getProductDetail(productId);
+    return data;
+}
 
 const createLike = async (userId, productId) => {
   checkEmptyValues(userId, productId);
@@ -39,6 +47,7 @@ const deleteLike = async (userId, productId) => {
 };
 
 module.exports = {
+  getProductDetail,
   createLike,
   deleteLike,
 };
