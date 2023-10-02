@@ -9,6 +9,9 @@ const getReviews = async (productId, queryParams) => {
     throwError(404, "CONTENT_NOT_FOUND");
   }
   const reviews = await reviewsModel.getReviewsByProductId(productId, queryParams);
+  reviews.forEach(item => {
+    item.authorName = item.authorName.slice(0,2) + "*".repeat(item.authorName.length - 2);
+  });
 
   const count = await reviewsModel.getReviewsCount(productId);
 
