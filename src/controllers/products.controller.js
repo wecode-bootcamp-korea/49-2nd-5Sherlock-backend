@@ -1,32 +1,63 @@
 const { productsService } = require("../services");
 
-const createLike = async (req, res) => {
+const getProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
-    // const { userId } = req;
-    const userId = req.get("userId");
-    await productsService.createLike(userId, productId);
-    res.status(201).json({ message: "likeCreated" });
+    let {
+      category,
+      sort = "rating",
+      product_type,
+      offset = 0,
+      limit = 12,
+    } = req.query;
+    const userId = req.userId;
+    const productList = await productsService.getProductList(
+      userId,
+      category,
+      sort,
+      product_type,
+      offset,
+      limit
+    );
+
+    const totalProduct = await productsService.getTotalProduct(
+      category,
+      product_type
+    );
+
+    res.status(200).json({
+      message: "querySuccess",
+      data: productList,
+      productCount: totalProduct,
+    });
   } catch (error) {
-    console.log(error);
+    console.log("error", error);
     res.status(error.status).json({ message: error.message });
   }
 };
 
-const deleteLike = async (req, res) => {
+const getBestProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
-    // const { userId } = req;
-    const userId = req.get("userId");
-    await productsService.deleteLike(userId, productId);
-    res.status(204).json({ message: "likeDeleted" });
+    const { category, sort } = req.query;
+    const bestProduct = await productsService.getBestProduct(category, sort);
+    res.status(200).json({
+      message: "Success",
+      data: bestProduct,
+     });
   } catch (error) {
-    console.log(error);
+    console.log("error", error);
     res.status(error.status).json({ message: error.message });
   }
 };
+
+const getProductDetail = async (req, res) => {
+    const productId = req.params.product_id;
+    const data = await productsService.getProductDetail(productId);
+    return res.status(200).json({ data });
+}
+
 
 module.exports = {
-  createLike,
-  deleteLike,
+  getProduct,
+  getBestProduct,
+  getProductDetail,
 };
