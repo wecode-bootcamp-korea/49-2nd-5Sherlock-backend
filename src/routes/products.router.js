@@ -1,10 +1,24 @@
 const express = require("express");
 
-const { productController } = require("../controllers");
+const {
+  productsController,
+  likesController,
+  reviewsController,
+} = require("../controllers");
 
-const productRouter = express.Router();
+const productsRouter = express.Router();
 
-productRouter.get("/", productController.getProduct);
-productRouter.get("/bestProduct", productController.getBestProduct);
+productsRouter.get("/", productsController.getProduct);
 
-module.exports = { productRouter };
+productsRouter.get("/bestProduct", productsController.getBestProduct);
+
+productsRouter.get("/:product_id", productsController.getProductDetail);
+
+productsRouter.post("/:productId/likes", likesController.createLike);
+productsRouter.delete("/:productId/likes", likesController.deleteLike);
+
+productsRouter.get("/:productId/reviews", reviewsController.getReviews);
+
+module.exports = {
+  productsRouter,
+};

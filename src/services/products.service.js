@@ -49,11 +49,19 @@ const getBestProduct = async (category, sort) => {
     item.reviewNumber = parseInt(item.reviewNumber);
     item.rating = parseInt(item.rating);
   });
-  return product;
-};
+
+const getProductDetail = async (productId) => {
+    if (!productId) {
+        throwError(400, "KEY_ERROR");
+    }
+
+    const data = await productsModel.getProductDetail(productId);
+    return data;
+}
 
 module.exports = {
   getProductList,
   getTotalProduct,
   getBestProduct,
+  getProductDetail,
 };

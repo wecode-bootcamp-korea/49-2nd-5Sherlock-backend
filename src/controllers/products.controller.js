@@ -10,7 +10,6 @@ const getProduct = async (req, res) => {
       limit = 12,
     } = req.query;
     const userId = req.userId;
-    console.log(userId, category, sort, offset, limit, product_type);
     const productList = await productsService.getProductList(
       userId,
       category,
@@ -43,14 +42,22 @@ const getBestProduct = async (req, res) => {
     res.status(200).json({
       message: "Success",
       data: bestProduct,
-    });
+     });
   } catch (error) {
     console.log("error", error);
     res.status(error.status).json({ message: error.message });
   }
 };
 
+const getProductDetail = async (req, res) => {
+    const productId = req.params.product_id;
+    const data = await productsService.getProductDetail(productId);
+    return res.status(200).json({ data });
+}
+
+
 module.exports = {
   getProduct,
   getBestProduct,
+  getProductDetail,
 };
