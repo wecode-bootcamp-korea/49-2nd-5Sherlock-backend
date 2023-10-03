@@ -3,14 +3,14 @@ const { AppDataSource } = require("./data-source");
 const getCartByUserId = async (userId) => {
   const cart = await AppDataSource.query(`
     SELECT
-      carts.product_id,
+      carts.product_id AS productId,
       carts.quantity,
       products.name,
-      products.price,
-      products.discount_rate
+      products.price AS originalPrice,
+      products.discount_rate AS discountRate
     FROM
       carts
-    LEFT JOIN products.id ON carts.product_id
+    LEFT JOIN products ON products.id = carts.product_id
     WHERE carts.user_id = ${userId}
     ;
   `);

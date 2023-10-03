@@ -10,7 +10,10 @@ const getCart = async (userId) => {
   if (!user) throwError(404, "USER_NOT_FOUND");
   const cart = await cartsModel.getCartByUserId(userId);
 
-  // 계산해서 전달
+  cart.forEach((item) => {
+    item.price = Math.ceil(item.originalPrice * (1 - item.discountRate / 100));
+    item.itemTotal = item.price * item.quantity;
+  });
 
   return cart;
 };
