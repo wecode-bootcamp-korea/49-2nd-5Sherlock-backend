@@ -132,14 +132,16 @@ const getBestProduct = async (category, orderingQuery) => {
     ${orderingQuery}
     limit 12 offset 0;`;
   }
-
+  console.log(query);
   const product = await AppDataSource.query(query);
-
+  console.log(product);
   return product;
 };
 
 const getProductDetail = async (productId) => {
-  const data = await AppDataSource.query(`SELECT * FROM products WHERE id=${productId};`);
+  const data = await AppDataSource.query(
+    `SELECT * FROM products WHERE id=${productId};`
+  );
   return data;
 };
 
