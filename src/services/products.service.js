@@ -49,6 +49,7 @@ const getBestProduct = async (category, sort) => {
     item.reviewNumber = parseInt(item.reviewNumber);
     item.rating = parseInt(item.rating);
   });
+};
 
 const getProductDetail = async (productId) => {
     if (!productId) {

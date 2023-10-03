@@ -15,7 +15,16 @@ const addToCart = async (req, res) => {
   return res.status(201).json({ message: "cartItemCreated" });
 };
 
+const getCartItemCount = async (req, res) => {
+  //   const { userId } = req;
+  const userId = req.get("userId");
+  const cart = await cartsService.getCart(userId);
+  return res.status(200).json({ message: "querySuccess", cartItemCount: cart.length });
+};
+
+
 module.exports = {
   getCart,
   addToCart,
+  getCartItemCount,
 };
