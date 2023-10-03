@@ -8,6 +8,9 @@ usersRouter.post("/signUp", usersController.signUp);
 
 usersRouter.post("/signIn", usersController.signIn);
 
+usersRouter.post("/tokenCheck", usersController.verifyToken);
+
+
 module.exports = {
   usersRouter,
 };

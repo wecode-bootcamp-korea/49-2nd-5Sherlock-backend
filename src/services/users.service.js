@@ -68,10 +68,10 @@ const signIn = async (email, password) => {
   await checkCorrectPassword(password, user.password);
 
   return generateToken(user.id);
-};
+
+}
 
 module.exports = {
   signIn,
   signUp,
 };
-  
