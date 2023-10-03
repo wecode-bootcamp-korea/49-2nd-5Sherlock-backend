@@ -49,19 +49,27 @@ const getBestProduct = async (category, sort) => {
     item.reviewNumber = parseInt(item.reviewNumber);
     item.rating = parseInt(item.rating);
   });
+};
 
 const getProductDetail = async (productId) => {
-    if (!productId) {
-        throwError(400, "KEY_ERROR");
-    }
+  if (!productId) {
+    throwError(400, "KEY_ERROR");
+  }
 
-    const data = await productsModel.getProductDetail(productId);
-    return data;
-}
+  const data = await productsModel.getProductDetail(productId);
+  return data;
+};
+
+const getSpecialPriceProduct = async () => {
+  const [product] = await productsModel.getSpecialPriceProduct();
+  product.price = Math.ceil(product.originalPrice * (1 - product.discountRate / 100));
+  return product;
+};
 
 module.exports = {
   getProductList,
   getTotalProduct,
   getBestProduct,
   getProductDetail,
+  getSpecialPriceProduct,
 };
