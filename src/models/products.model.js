@@ -77,12 +77,11 @@ const totalProduct = async (categorizingQuery, product_type) => {
 
   query += categorizingQuery;
   if (product_type) {
-    const teasorting = product_type.split(",").map((cat) => parseInt(cat)); // 쉼표로 구분된 카테고리를 배열로 분할
+    const teasorting = product_type.split(",").map((cat) => parseInt(cat));
     query += ` AND products.product_type_id IN (${teasorting.join(",")})`;
   }
 
   if (!product_type) {
-    // teasort 값이 없는 경우 모든 값을 가져오며, 비어있는 category_id도 포함
     query += ` AND (products.product_type_id IN (1, 2, 3, 4) OR products.product_type_id IS NULL OR products.product_type_id = '')`;
   }
   // console.log(query);
@@ -91,7 +90,6 @@ const totalProduct = async (categorizingQuery, product_type) => {
 };
 
 const getBestProduct = async (category, orderingQuery) => {
-  console.log(category);
   let query = `SELECT
     products.id AS id,
     (
@@ -122,14 +120,12 @@ const getBestProduct = async (category, orderingQuery) => {
     LEFT JOIN reviews ON reviews.product_id=products.id`;
 
   if (!isNaN(parseInt(category))) {
-    console.log("category");
     query += `
     WHERE quantity > 0
     GROUP BY products.id
     ORDER BY reviewNumber DESC, products.id ASC
     limit 12 offset 0;`;
   } else {
-    console.log("!category");
     query += `
     WHERE WEEK(reviews.created_at) = WEEK(CURDATE()) AND quantity > 0
     GROUP BY products.id
@@ -137,7 +133,6 @@ const getBestProduct = async (category, orderingQuery) => {
     limit 12 offset 0;`;
   }
 
-  console.log(query);
   const product = await AppDataSource.query(query);
 
   return product;
@@ -148,24 +143,3 @@ module.exports = {
   totalProduct,
   getBestProduct,
 };
-
-/*[
-    {
-      id: 1,n
-      productImg = {
-        picFirst:
-        'https://image.osulloc.com/upload/kr/ko/adminImage/NK/UF/304_20221114150238508QK.png',
-        picSecond:
-        'https://image.osulloc.com/upload/kr/ko/adminImage/HW/AQ/304_20220921131344082JD.png',
-      }
-      category: '차 세트',
-      price: 27000,
-      originalPrice: 30000,
-      discountRate: 10,
-      likeNumber: 77,
-      reviewNumber: 107,
-      isNew: true, 
-      isLiked: true,
-      quantity: 10
-    }
-]*/
