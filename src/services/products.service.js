@@ -1,7 +1,23 @@
-const { checkEmptyValues } = require("../utils/checkEmptyValues");
-const { checkExistingUserById } = require("./usersUtils/users.util");
-const { checkExistingProductById, checkExistingLike } = require("./productsUtils/products.util");
-const {likesModel, productsModel} = require("../models");
+
+const { productModel } = require("../models");
+
+const getProductList = async (userId) => {
+  // if(page==내림차순){ , page, sort, category
+
+  // }
+
+  // if(category){
+
+  // }
+
+  // if(sort){
+
+  // }
+
+  const product = await productModel.productList(userId);
+
+  return product;
+}
 
 const getProductDetail = async (productId) => {
     if (!productId) {
@@ -12,42 +28,14 @@ const getProductDetail = async (productId) => {
     return data;
 }
 
-const createLike = async (userId, productId) => {
-  checkEmptyValues(userId, productId);
-  const user = await checkExistingUserById(userId);
-  if (!user) {
-    throwError(404, "USER_NOT_FOUND");
-  }
-  const product = await checkExistingProductById(productId);
-  if (!product) {
-    throwError(404, "CONTENT_NOT_FOUND");
-  }
-  const like = await checkExistingLike(userId, productId);
-  if (like) {
-    throwError(400, "DUPLICATE_LIKE");
-  }
-  await likesModel.createLike(userId, productId);
-};
+const getTotalProduct = async (req, res) => {
+  const product = await productModel.totalProduct(req, res);
 
-const deleteLike = async (userId, productId) => {
-  checkEmptyValues(userId, productId);
-  const user = await checkExistingUserById(userId);
-  if (!user) {
-    throwError(404, "USER_NOT_FOUND");
-  }
-  const product = await checkExistingProductById(productId);
-  if (!product) {
-    throwError(404, "CONTENT_NOT_FOUND");
-  }
-  const like = await checkExistingLike(userId, productId);
-  if (!like) {
-    throwError(404, "CONTENT_NOT_FOUND");
-  }
-  await likesModel.deleteLike(userId, productId);
+  return product;
 };
 
 module.exports = {
+  getProductList,
+  getTotalProduct,
   getProductDetail,
-  createLike,
-  deleteLike,
 };
