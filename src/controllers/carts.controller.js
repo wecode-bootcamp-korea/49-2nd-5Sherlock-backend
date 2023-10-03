@@ -15,8 +15,8 @@ const addToCart = async (req, res) => {
 
 const getCartItemCount = async (req, res) => {
   const { userId } = req;
-  const cart = await cartsService.getCart(userId);
-  return res.status(200).json({ message: "querySuccess", cartItemCount: cart.length });
+  const count = await cartsService.getCartItemCount(userId);
+  return res.status(200).json({ message: "querySuccess", cartItemCount: count });
 };
 
 

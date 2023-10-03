@@ -27,7 +27,19 @@ const createCartItem = async (userId, productId) => {
   `)
 };
 
+const getCartItemCountByUserId = async (userId) => {
+  const [{count}] = await AppDataSource.query(`
+    SELECT
+      COUNT(*) AS count
+    FROM carts
+    WHERE carts.user_id = ${userId}
+    ;
+  `);
+  return count;
+};
+
 module.exports = {
   getCartByUserId,
   createCartItem,
+  getCartItemCountByUserId,
 };

@@ -30,7 +30,17 @@ const addToCart = async (userId, productId) => {
   await cartsModel.createCartItem(userId, productId);
 };
 
+const getCartItemCount = async (userId) => {
+  checkEmptyValues(userId);
+  const user = getUserById(userId);
+  if (!user) throwError(404, "USER_NOT_FOUND");
+  const count = await cartsModel.getCartItemCountByUserId(userId);
+
+  return count;
+};
+
 module.exports = {
   getCart,
   addToCart,
+  getCartItemCount,
 };
