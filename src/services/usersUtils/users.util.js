@@ -26,11 +26,13 @@ function validatePasswordInput(password) {
   }
 }
 
-async function checkExistingUser(email) {
+async function checkExistingUserByEmail(email) {
   const user = await usersModel.getUserByEmail(email);
-  if (!user) {
-    throwError(404, "USER_NOT_FOUND");
-  }
+  return user;
+}
+
+async function checkExistingUserById(userId) {
+  const user = await usersModel.getUserById(userId);
   return user;
 }
 
@@ -52,7 +54,8 @@ function generateToken(id) {
 module.exports = {
   generateToken,
   checkCorrectPassword,
-  checkExistingUser,
+  checkExistingUserByEmail,
   validateEmailInput,
   validatePasswordInput,
+  checkExistingUserById,
 };

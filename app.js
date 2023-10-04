@@ -6,7 +6,6 @@ require("dotenv").config();
 const { router } = require("./src/routes");
 const { verifyToken } = require("./src/middleware/tokencheck");
 
-
 const app = express();
 
 app.use(cors());
@@ -22,6 +21,7 @@ app.get("/", async (req, res) => {
     console.log(err);
   }
 });
+
 const server = http.createServer(app);
 
 app.get('/generateToken', authController.generateToken);

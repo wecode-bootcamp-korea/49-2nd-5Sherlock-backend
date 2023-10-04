@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
 const {
-  checkExistingUser,
+  checkExistingUserByEmail,
   checkCorrectPassword,
   generateToken,
 } = require("./usersUtils/users.util");
@@ -62,9 +62,10 @@ const signUp = async (name, email, password, phoneNumber) => {
 const signIn = async (email, password) => {
   checkEmptyValues(email, password);
 
-  const user = await checkExistingUser(email);
-  console.log(user);
-
+  const user = await checkExistingUserByEmail(email);
+  if (!user) {
+    throwError(404, "USER_NOT_FOUND");
+  }
   await checkCorrectPassword(password, user.password);
 
   return generateToken(user.id);

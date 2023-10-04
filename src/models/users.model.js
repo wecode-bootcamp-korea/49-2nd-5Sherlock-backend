@@ -1,6 +1,5 @@
 const { AppDataSource } = require("./data-source");
 
-
 const createUser = async (name, email, hashedPw, phoneNumber) => {
   await AppDataSource.query(`
   INSERT INTO users (                    
@@ -18,7 +17,6 @@ const createUser = async (name, email, hashedPw, phoneNumber) => {
 `);
 };
 
-
 async function getUserByEmail(email) {
   const users = await AppDataSource.query(`
     SELECT
@@ -33,18 +31,21 @@ async function getUserByEmail(email) {
   return users[0];
 }
 
-const getUserById = async (userId) => {
-  const user = await AppDataSource.query(`
-    SELECT id
-    FROM users
-    WHERE id = '${userId}'
-    LIMIT 1;
+async function getUserById(userId) {
+  const users = await AppDataSource.query(`
+    SELECT
+      id
+    FROM
+      users
+    WHERE
+      id = "${userId}"
+    ;
   `);
-  return user;
-};
+  return users[0];
+}
 
 module.exports = {
   createUser,
   getUserByEmail,
-  getUserById
+  getUserById,
 };
