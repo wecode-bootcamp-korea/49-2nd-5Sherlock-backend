@@ -2,8 +2,7 @@ const { destinationsService } = require("../services");
 
 const getAddress = async (req, res) => {
     try {
-    //   const userId  = req.userId;
-    const userId = 1;
+      const userId  = req.userId;
       const destinations = await destinationsService.getAddress(userId)
 
       return res.status(201).json({
