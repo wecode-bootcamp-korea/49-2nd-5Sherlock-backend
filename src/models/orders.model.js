@@ -45,13 +45,26 @@ const createOrder = async (
     `
     );
 
-    const updateCart = await AppDataSource.query(
+    const cartQuantity = await AppDataSource.query(
       `
-      UPDATE carts SET quantity= quantity - ${quantity} WHERE user_id = ${userId} AND product_id = ${productId} 
+      SELECT quantity FROM carts WHERE user_id = ${userId} AND product_id = ${productId};
     `
     );
-  }
 
+    if (cartQuantity[0].quantity == quantity) {
+      await AppDataSource.query(
+        `
+        DELETE FROM carts WHERE user_id = ${userId} AND product_id = ${productId};
+      `
+      );
+    } else {
+      await AppDataSource.query(
+        `
+      UPDATE carts SET quantity= quantity - ${quantity} WHERE user_id = ${userId} AND product_id = ${productId} 
+    `
+      );
+    }
+  }
   // 다섯 번째 쿼리 실행
   if (defaultAddress == true) {
     await AppDataSource.query(`
@@ -65,9 +78,6 @@ const createOrder = async (
   return orderList;
 };
 
-// const deleteOrder = async (req, res) => {};
-
 module.exports = {
   createOrder,
-  //   deleteOrder,
 };
