@@ -1,4 +1,5 @@
 const express = require("express");
+const { validateToken } = require("../middleware/auth");
 
 const {
   productsController,
@@ -15,8 +16,9 @@ productsRouter.get("/specialPriceProduct", productsController.getSpecialPricePro
 
 productsRouter.get("/:product_id", productsController.getProductDetail);
 
-productsRouter.post("/:productId/likes", likesController.createLike);
-productsRouter.delete("/:productId/likes", likesController.deleteLike);
+productsRouter.post("/:productId/likes", validateToken, likesController.createLike);
+
+productsRouter.delete("/:productId/likes", validateToken, likesController.deleteLike);
 
 productsRouter.get("/:productId/reviews", reviewsController.getReviews);
 
