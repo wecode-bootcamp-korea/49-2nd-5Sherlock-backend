@@ -1,4 +1,4 @@
-const {throwError} = require("./throwError");
+const { throwError } = require("./throwError");
 
 function checkEmptyValues() {
   for (let i = 0; i < arguments.length; i++) {
