@@ -69,10 +69,16 @@ const signIn = async (email, password) => {
   await checkCorrectPassword(password, user.password);
 
   return generateToken(user.id);
-};
 
+}
+const findUser = async (userId) => {
+  const user = await usersModel.getUserById(userId);
+  if (!user) {
+    throwError(404, "USER_NOT_FOUND");
+  }
+};
 module.exports = {
   signIn,
   signUp,
+  findUser
 };
-  
