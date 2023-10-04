@@ -49,6 +49,7 @@ const getBestProduct = async (category, sort) => {
     item.reviewNumber = parseInt(item.reviewNumber);
     item.rating = parseInt(item.rating);
   });
+}
 
 const getProductDetail = async (productId) => {
     if (!productId) {
@@ -57,7 +58,7 @@ const getProductDetail = async (productId) => {
 
     const data = await productsModel.getProductDetail(productId);
     return data;
-}
+  }
 
 module.exports = {
   getProductList,
