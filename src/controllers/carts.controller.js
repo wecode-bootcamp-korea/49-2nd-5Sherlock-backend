@@ -9,8 +9,8 @@ const getCart = async (req, res) => {
 const addToCart = async (req, res) => {
   const { userId } = req;
   const { productId, quantity } = req.body;
-  await cartsService.addToCart(userId, productId, quantity);
-  return res.status(201).json({ message: "cartItemCreated" });
+  const result = await cartsService.addToCart(userId, productId, quantity);
+  return res.status(201).json({ message: "cartItem"+result });
 };
 
 const getCartItemCount = async (req, res) => {

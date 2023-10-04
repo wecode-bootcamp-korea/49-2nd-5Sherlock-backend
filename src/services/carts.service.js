@@ -26,9 +26,14 @@ const addToCart = async (userId, productId, quantity) => {
   const product = await productsModel.getProductById(productId);
   if (!product) throwError(404, "CONTENT_NOT_FOUND");
 
-  // const cartItem = await cartsModel.checkDuplicateCartItem(userId, productId);
-
-  await cartsModel.createCartItem(userId, productId, quantity);
+  const cartItem = await cartsModel.checkDuplicateCartItem(userId, productId);
+  if (cartItem) {
+    await cartsModel.updateCartItem(cartItem.id, cartItem.quantity + quantity);
+    return "Updated";
+  } else {
+    await cartsModel.createCartItem(userId, productId, quantity);
+    return "Created";
+  }
 };
 
 const getCartItemCount = async (userId) => {

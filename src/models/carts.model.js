@@ -39,12 +39,32 @@ const getCartItemCountByUserId = async (userId) => {
 };
 
 const checkDuplicateCartItem = async (userId, productId) => {
-
+  const [cartItem] = await AppDataSource.query(`
+  SELECT
+    id,
+    user_id,
+    product_id,
+    quantity
+  FROM carts
+  WHERE user_id=${userId} AND product_id=${productId}
+  ;
+  `)
+  return cartItem;
 };
+
+const updateCartItem = async (id, updatedQuantity) => {
+  await AppDataSource.query(`
+    UPDATE carts
+    SET quantity=${updatedQuantity}
+    WHERE id=${id}
+  ;
+  `)
+}
 
 module.exports = {
   getCartByUserId,
   createCartItem,
   getCartItemCountByUserId,
   checkDuplicateCartItem,
+  updateCartItem,
 };
