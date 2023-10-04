@@ -42,7 +42,7 @@ const getBestProduct = async (req, res) => {
     res.status(200).json({
       message: "Success",
       data: bestProduct,
-     });
+    });
   } catch (error) {
     console.log("error", error);
     res.status(error.status).json({ message: error.message });
@@ -50,14 +50,19 @@ const getBestProduct = async (req, res) => {
 };
 
 const getProductDetail = async (req, res) => {
-    const productId = req.params.product_id;
-    const data = await productsService.getProductDetail(productId);
-    return res.status(200).json({ data });
-}
+  const productId = req.params.product_id;
+  const data = await productsService.getProductDetail(productId);
+  return res.status(200).json({ data });
+};
 
+const getSpecialPriceProduct = async (req, res) => {
+  const product = await productsService.getSpecialPriceProduct();
+  return res.status(200).json({ message: "querySuccess", data: product });
+};
 
 module.exports = {
   getProduct,
   getBestProduct,
   getProductDetail,
+  getSpecialPriceProduct
 };
