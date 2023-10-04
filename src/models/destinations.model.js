@@ -8,11 +8,13 @@ const getAddress = async (userId) => {
         address_name AS addressName,
         receiver_name AS receiverName,
         receiver_phone_number AS receiverPhoneNumber,
-        user_id AS userId,
-
-    FROM destinations
-    WHERE user_id=${userId}
-  ;`);
+        user_id AS userId
+    FROM 
+        destinations
+    WHERE 
+        user_id = "${userId}"
+    ;
+  `);
   return data; // data = [{id}, {address}, {addressName}, {receiverName}, {receiverPhoneNumber}]
 };
 

@@ -2,11 +2,12 @@ const { destinationsService } = require("../services");
 
 const getAddress = async (req, res) => {
     try {
-      const userId  = req.userId;
+    //   const userId  = req.userId;
+    const userId = 1;
       const destinations = await destinationsService.getAddress(userId)
 
       return res.status(201).json({
-        message: "getaddress success",
+        message: "querySuccess",
         data: destinations
       });
     } catch (error) {
@@ -24,7 +25,7 @@ const getAddress = async (req, res) => {
       await destinationsService.createAddress(address,addressName,receiverName,receiverPhoneNumber,userId);
 
       return res.status(201).json({
-        message: "address created"
+        message: "addressCreated"
       });
     } catch (error) {
       console.log(error);
