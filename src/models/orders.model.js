@@ -10,19 +10,19 @@ const createOrder = async (
   payment,
   status
 ) => {
-  // 첫 번째 쿼리 실행
+  // order 테이블에 주문내역 저장
   const addOrder = await AppDataSource.query(`
     INSERT INTO orders (user_id, receiver_name, receiver_phone_number, address, payment, status)
     VALUES (${userId}, "${receiverName}","${receiverPhoneNumber}","${receiverAddress}","${payment}",${status});
   `);
 
-  // 두 번째 쿼리 실행
+  // 방금 주문 내역에서 id 뽑아오기
   const getOrderId = await AppDataSource.query(
     `SELECT LAST_INSERT_ID() as order_id;`
   );
   const orderId = getOrderId[0].order_id;
 
-  // 세 번째 쿼리 및 네 번째 쿼리 실행
+  // 장바구니에 있는 내용 ordered_goods 테이블로 저장하고 carts 테이블에서 그만큼 삭제
   for (let i = 0; i < products.length; i++) {
     const { productId, quantity } = products[i];
     console.log("productId:", productId);
@@ -50,7 +50,7 @@ const createOrder = async (
       SELECT quantity FROM carts WHERE user_id = ${userId} AND product_id = ${productId};
     `
     );
-
+    // carts 테이블의 수량과 주문수량이 같으면 carts 테이블에 해당 행 삭제
     if (cartQuantity[0].quantity == quantity) {
       await AppDataSource.query(
         `
@@ -65,7 +65,7 @@ const createOrder = async (
       );
     }
   }
-  // 다섯 번째 쿼리 실행
+  // 기본 배송지 체크 유무로 users 테이블에 기본배송지 저장
   if (defaultAddress == true) {
     await AppDataSource.query(`
       INSERT INTO users (default_destination) VALUES ("${receiverAddress}");
