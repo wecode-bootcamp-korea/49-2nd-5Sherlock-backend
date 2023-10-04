@@ -72,8 +72,8 @@ const signIn = async (email, password) => {
 
 }
 const findUser = async (userId) => {
-  const user_list = await usersModel.getUserById(userId);
-  if (user_list.length == 0) {
+  const user = await usersModel.getUserById(userId);
+  if (!user) {
     throwError(404, "USER_NOT_FOUND");
   }
 };
