@@ -17,12 +17,12 @@ const getCartByUserId = async (userId) => {
   return cart;
 };
 
-const createCartItem = async (userId, productId) => {
+const createCartItem = async (userId, productId, quantity) => {
   await AppDataSource.query(`
     INSERT INTO carts
       (user_id, product_id, quantity)
     VALUES
-      (${userId}, ${productId}, 1)
+      (${userId}, ${productId}, ${quantity})
     ;
   `)
 };
@@ -38,8 +38,13 @@ const getCartItemCountByUserId = async (userId) => {
   return count;
 };
 
+const checkDuplicateCartItem = async (userId, productId) => {
+
+};
+
 module.exports = {
   getCartByUserId,
   createCartItem,
   getCartItemCountByUserId,
+  checkDuplicateCartItem,
 };
