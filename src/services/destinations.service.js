@@ -1,6 +1,3 @@
-// const { checkEmptyValues } = require("../utils/checkEmptyValues");
-// const { checkExistingUserById } = require("./usersUtils/users.util");
-// const { checkExistingProductById, checkExistingLike } = require("./productsUtils/products.util");
 
 const { destinationsModel, usersModel } = require("../models");
 const { throwError } = require("../utils/throwError");
