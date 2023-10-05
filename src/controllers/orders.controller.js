@@ -2,11 +2,18 @@ const { ordersService } = require("../services");
 
 const createOrder = async (req, res) => {
   try {
+    const { cart } = req.query;
+    // const { userId } = req;
+    const userId = 1;
     const {
-      userId,
       products,
+      customerName,
+      customerEmail,
+      customerPhoneNumber,
+      shipperName,
       receiverName,
       receiverAddress,
+      addressName = "기본배송지",
       defaultAddress = false,
       receiverPhoneNumber,
       payment,
@@ -15,35 +22,29 @@ const createOrder = async (req, res) => {
     const orderList = await ordersService.createOrder(
       userId,
       products,
+      customerName,
+      customerEmail,
+      customerPhoneNumber,
+      shipperName,
       receiverName,
       receiverAddress,
+      addressName,
       defaultAddress,
       receiverPhoneNumber,
       payment,
-      status
+      status,
+      cart
     );
+
     res.status(200).json({
       message: "orderSuccess",
       data: orderList,
     });
   } catch (error) {
     console.log(error);
-    res.status(error.status).json({ message: "안돼" });
+    res.status(error.status).json({ message: "Failed order" });
   }
 };
-
-// const deleteOrder = async (req, res) => {
-//   try {
-//     res.status(200).json({
-//       message: "querySuccess",
-//       data: reviews,
-//       reviewsCount: count,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(error.status).json({ message: error.message });
-//   }
-// };
 
 module.exports = {
   createOrder,

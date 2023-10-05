@@ -10,7 +10,7 @@ const productsRouter = express.Router();
 
 productsRouter.get("/", productsController.getProduct);
 
-productsRouter.get("/bestProduct", productsController.getBestProduct);
+productsRouter.get("/bestProducts", productsController.getBestProduct);
 
 productsRouter.get("/:product_id", productsController.getProductDetail);
 

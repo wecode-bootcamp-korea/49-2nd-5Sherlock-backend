@@ -1,32 +1,71 @@
 const { ordersModel } = require("../models");
-const { throwError } = require("../utils/throwError");
+// const { throwError } = require("../utils/throwError");
 
 const createOrder = async (
   userId,
   products,
+  customerName,
+  customerEmail,
+  customerPhoneNumber,
+  shipperName,
   receiverName,
   receiverAddress,
+  addressName,
   defaultAddress,
   receiverPhoneNumber,
   payment,
-  status
+  status,
+  cart
 ) => {
-  const orderList = await ordersModel.createOrder(
+  const orderId = await ordersModel.createOrder(
     userId,
-    products,
+    customerName,
+    customerEmail,
+    customerPhoneNumber,
+    shipperName,
     receiverName,
     receiverAddress,
-    defaultAddress,
     receiverPhoneNumber,
     payment,
     status
   );
+  if (cart == 1) {
+    for (let i = 0; products.length > i; i++) {
+      const { productId, quantity } = products[i];
+      await ordersModel.saveOrderedGoodsTableByCarts(
+        productId,
+        quantity,
+        userId,
+        orderId
+      );
+      const cartQuantity = await ordersModel.checkCartQuantity(
+        userId,
+        productId
+      );
+      if (cartQuantity && cartQuantity[0].quantity == quantity) {
+        await ordersModel.deleteCartsTable(userId, productId);
+      } else {
+        await ordersModel.modifyCartsTable(quantity, userId, productId);
+      }
+    }
+  } else if (cart == "" || cart == undefined) {
+    const { productId, quantity } = products[0];
+    await ordersModel.saveOrderedGoodsTable(productId, quantity, orderId);
+  }
 
-  // if (!productId) {
-  //   throwError(403, "CONTENT_NOT_FOUND");
-  // }
+  if (defaultAddress == true) {
+    const destinationId = await ordersModel.saveDestination(
+      receiverAddress,
+      addressName,
+      receiverName,
+      receiverPhoneNumber,
+      userId
+    );
+    await ordersModel.saveDefaultDestination(destinationId, userId);
+  }
 
-  return orderList;
+  const result = await ordersModel.orderList(orderId);
+  return result;
 };
 
 module.exports = {
