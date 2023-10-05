@@ -10,7 +10,8 @@ const createOrder = async (
   receiverAddress,
   receiverPhoneNumber,
   payment,
-  status
+  status,
+  shippingMessage
 ) => {
   // order 테이블에 주문내역 저장
   const addOrder = await AppDataSource.query(`
@@ -25,7 +26,8 @@ const createOrder = async (
        customer_name, 
        customer_email, 
        customer_Phone_Number, 
-       shipper_name)
+       shipper_name,
+       shipping_message)
     VALUES 
     (
       ${userId}, 
@@ -37,7 +39,8 @@ const createOrder = async (
       "${customerName}",
       "${customerEmail}",
       "${customerPhoneNumber}",
-      "${shipperName}");
+      "${shipperName}",
+      "${shippingMessage}");
   `);
 
   const orderId = addOrder.insertId;

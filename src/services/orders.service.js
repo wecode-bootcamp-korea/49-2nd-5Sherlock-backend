@@ -12,6 +12,7 @@ const createOrder = async (
   receiverAddress,
   addressName,
   defaultAddress,
+  shippingMessage,
   receiverPhoneNumber,
   payment,
   status,
@@ -27,7 +28,8 @@ const createOrder = async (
     receiverAddress,
     receiverPhoneNumber,
     payment,
-    status
+    status,
+    shippingMessage
   );
   if (cart == 1) {
     for (let i = 0; products.length > i; i++) {
