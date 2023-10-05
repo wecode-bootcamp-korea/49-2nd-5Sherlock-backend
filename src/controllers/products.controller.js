@@ -50,18 +50,29 @@ const getBestProduct = async (req, res) => {
 };
 
 const getProductDetail = async (req, res) => {
-  const productId = req.params.productId;
-  const data = await productsService.getProductDetail(productId);
-  return res.status(200).json({ 
-    message: "querySuccess",
-    data: data
-   });
+  try {
+    const productId = req.params.productId;
+    const data = await productsService.getProductDetail(productId);
+    return res.status(200).json({ 
+      message: "querySuccess",
+      data: data
+     });
+
+  } catch (error) {
+    console.log("error", error);
+    res.status(error.status).json({ message: error.message });
+  }
 };
 
 
 const getSpecialPriceProduct = async (req, res) => {
-  const product = await productsService.getSpecialPriceProduct();
-  return res.status(200).json({ message: "querySuccess", data: product });
+  try {
+    const product = await productsService.getSpecialPriceProduct();
+    return res.status(200).json({ message: "querySuccess", data: product });
+  } catch (error) {
+    console.log("error", error);
+    res.status(error.status).json({ message: error.message });
+  }
 };
 
 module.exports = {

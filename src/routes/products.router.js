@@ -15,7 +15,7 @@ productsRouter.get("/bestProducts", productsController.getBestProduct);
 
 productsRouter.get("/specialPriceProduct", productsController.getSpecialPriceProduct);
 
-productsRouter.get("/:product_id", productsController.getProductDetail);
+productsRouter.get("/:productId", productsController.getProductDetail);
 
 productsRouter.post("/:productId/likes", validateToken, likesController.createLike);
 productsRouter.delete("/:productId/likes", validateToken, likesController.deleteLike);

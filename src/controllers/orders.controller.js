@@ -2,10 +2,9 @@ const { ordersService } = require("../services");
 
 const createOrder = async (req, res) => {
   try {
-    const { cart } = req.query;
     const { userId } = req;
-    // const userId = 1;
     const {
+      cart,
       products,
       customerName,
       customerEmail,
@@ -50,7 +49,9 @@ const createOrder = async (req, res) => {
 
 const checkoutOrder = async (req, res) => {
   try {
-    const data = await ordersService.checkoutOrder(req.userId, req.body);
+    const { cart, ...itemsQuery } = req.query;
+    const items = JSON.parse(itemsQuery.items);
+    const data = await ordersService.checkoutOrder(req.userId, items);
     res.status(200).json({
       message: "querySuccess",
       data: data,
