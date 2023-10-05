@@ -140,9 +140,31 @@ const getBestProduct = async (category, orderingQuery) => {
 };
 
 const getProductDetail = async (productId) => {
-  const data = await AppDataSource.query(
-    `SELECT * FROM products WHERE id=${productId};`
-  );
+  const data = await AppDataSource.query(`
+    SELECT
+      products.id,
+      products.name,
+      products.price AS originalPrice,
+      products.discount_rate AS discountRate,
+      products.price - (products.price * (products.discount_rate / 100)) AS price,
+      products.description,
+      products.category_id AS categoryId,
+      products.product_type_id AS productType,
+      products.provideBag,
+      products.pakage_service AS pakageService,
+      products.created_at AS createdAt,
+      products.updated_at AS updatedAt,
+      products.quantity,
+      categories.name AS categoryName,
+      product_images.url AS productImages,
+      IF(DATEDIFF(NOW(), products.created_at) < 30, "true", "false") AS isNew
+    FROM 
+      products 
+    LEFT JOIN categories ON products.category_id = categories.id
+    LEFT JOIN product_images ON products.id = product_images.product_id
+    WHERE products.id = ${productId}
+    ;`);
+
   return data;
 };
 
