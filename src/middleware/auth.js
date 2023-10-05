@@ -7,7 +7,6 @@ const { JWT_SECRET_KEY } = process.env;
 const validateToken = async (req, res, next) => {
   try {
     const token = req.get("authorization");
-    console.log(token);
     if (!token) {
     throwError(401, "UNAUTHORIZED");
     }
@@ -16,7 +15,6 @@ const validateToken = async (req, res, next) => {
     let userId;
     try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY); 
-    console.log(decoded);
     userId = decoded.id;
     //토큰이 존재하는 경우, JWT를 사용하여 검증, 
     //성공하면 해당 토큰의 payload 에서 사용자 ID 추출
