@@ -39,13 +39,7 @@ const createOrder = async (
       "${customerPhoneNumber}",
       "${shipperName}");
   `);
-  // 방금 주문 내역에서 id 뽑아오기
-  //   const getOrderId = await AppDataSource.query(
-  //     `SELECT LAST_INSERT_ID() as order_id;`
-  //   );
-  //   const orderId = getOrderId[0].order_id;
-  //   return orderId;
-  // };
+
   const orderId = addOrder.insertId;
   return orderId;
 };
