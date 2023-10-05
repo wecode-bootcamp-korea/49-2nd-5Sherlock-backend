@@ -1,12 +1,11 @@
-const { cartsModel } = require("../models");
-const { getProductById } = require("../models/products.model");
-const { getUserById } = require("../models/users.model");
+const { cartsModel, usersModel, productsModel } = require("../models");
+
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
 const { throwError } = require("../utils/throwError");
 
 const getCart = async (userId) => {
   checkEmptyValues(userId);
-  const user = getUserById(userId);
+  const user = usersModel.getUserById(userId);
   if (!user) throwError(404, "USER_NOT_FOUND");
   const cart = await cartsModel.getCartByUserId(userId);
 
@@ -18,21 +17,28 @@ const getCart = async (userId) => {
   return cart;
 };
 
-const addToCart = async (userId, productId) => {
-  checkEmptyValues(userId, productId);
+const addToCart = async (userId, productId, quantity) => {
+  checkEmptyValues(userId, productId, quantity);
 
-  const user = getUserById(userId);
+  const user = await usersModel.getUserById(userId);
   if (!user) throwError(404, "USER_NOT_FOUND");
 
-  const product = getProductById(productId);
+  const product = await productsModel.getProductById(productId);
   if (!product) throwError(404, "CONTENT_NOT_FOUND");
 
-  await cartsModel.createCartItem(userId, productId);
+  const cartItem = await cartsModel.checkDuplicateCartItem(userId, productId);
+  if (cartItem) {
+    await cartsModel.updateCartItem(cartItem.id, cartItem.quantity + quantity);
+    return "Updated";
+  } else {
+    await cartsModel.createCartItem(userId, productId, quantity);
+    return "Created";
+  }
 };
 
 const getCartItemCount = async (userId) => {
   checkEmptyValues(userId);
-  const user = getUserById(userId);
+  const user = usersModel.getUserById(userId);
   if (!user) throwError(404, "USER_NOT_FOUND");
   const count = await cartsModel.getCartItemCountByUserId(userId);
 
