@@ -11,7 +11,6 @@ const router = express.Router();
 router.use("/products", productsRouter);
 router.use("/orders", ordersRouter);
 router.use("/users", usersRouter); 
-router.use("/products", productsRouter); 
 router.use("/destinations", destinationsRouter);
 router.use("/carts", cartsRouter);
 

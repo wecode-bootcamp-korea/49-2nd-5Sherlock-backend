@@ -4,6 +4,7 @@ const createOrder = async (req, res) => {
   try {
     const { cart } = req.query;
     const { userId } = req;
+    // const userId = 1;
     const {
       products,
       customerName,
@@ -14,6 +15,7 @@ const createOrder = async (req, res) => {
       receiverAddress,
       addressName = "기본배송지",
       defaultAddress = false,
+      shippingMessage = null,
       receiverPhoneNumber,
       payment,
       status = 1,
@@ -29,6 +31,7 @@ const createOrder = async (req, res) => {
       receiverAddress,
       addressName,
       defaultAddress,
+      shippingMessage,
       receiverPhoneNumber,
       payment,
       status,

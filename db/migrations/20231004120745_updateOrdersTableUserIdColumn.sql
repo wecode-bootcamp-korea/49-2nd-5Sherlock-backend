@@ -7,3 +7,5 @@ MODIFY COLUMN user_id INT NULL;
 
 -- migrate:down
 
+ALTER TABLE orders
+MODIFY COLUMN user_id INT NOT NULL;

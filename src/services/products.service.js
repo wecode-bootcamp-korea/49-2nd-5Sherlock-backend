@@ -58,16 +58,16 @@ const getProductDetail = async (productId) => {
     throwError(400, "KEY_ERROR");
   }
 
-
   const data = await productsModel.getProductDetail(productId);
   return data;
 };
 
 const getSpecialPriceProduct = async () => {
   const [product] = await productsModel.getSpecialPriceProduct();
-  product.price = Math.ceil(product.originalPrice * (1 - product.discountRate / 100));
+  product.price = Math.ceil(
+    product.originalPrice * (1 - product.discountRate / 100)
+  );
   return product;
-
 };
 
 module.exports = {
@@ -77,4 +77,3 @@ module.exports = {
   getProductDetail,
   getSpecialPriceProduct,
 };
-
