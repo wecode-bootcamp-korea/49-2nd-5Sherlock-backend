@@ -2,9 +2,9 @@ const express = require("express");
 
 const { cartsController } = require("../controllers");
 
-const cartsRouter = express.Router();
-
 const { validateToken } = require("../middleware/auth");
+
+const cartsRouter = express.Router();
 
 cartsRouter.get("/", validateToken, cartsController.getCart);
 
