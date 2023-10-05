@@ -3,8 +3,7 @@ const { ordersService } = require("../services");
 const createOrder = async (req, res) => {
   try {
     const { cart } = req.query;
-    // const { userId } = req;
-    const userId = 1;
+    const { userId } = req;
     const {
       products,
       customerName,
