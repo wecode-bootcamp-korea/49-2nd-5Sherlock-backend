@@ -4,9 +4,11 @@ const {destinationsController} = require("../controllers");
 
 const destinationsRouter = express.Router();
 
-destinationsRouter.get("/getDestination", destinationsController.getAddress);
-destinationsRouter.post("/createDestination", destinationsController.createAddress);
+const { validateToken } = require("../middleware/auth");
 
+destinationsRouter.get("/getDestination", validateToken, destinationsController.getAddress);
+
+destinationsRouter.post("/createDestination", validateToken, destinationsController.createAddress);
 
 module.exports = {
   destinationsRouter,
