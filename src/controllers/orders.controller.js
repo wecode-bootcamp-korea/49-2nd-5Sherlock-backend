@@ -45,6 +45,21 @@ const createOrder = async (req, res) => {
   }
 };
 
+const checkoutOrder = async (req, res) => {
+  try {
+    const data = await ordersService.checkoutOrder(req.userId, req.body);
+    res.status(200).json({
+      message: "querySuccess",
+      data: data,
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(error.status).json({ message: "Failed order" });
+  }
+};
+
 module.exports = {
   createOrder,
+  checkoutOrder,
 };

@@ -7,10 +7,18 @@ const getCartByUserId = async (userId) => {
       carts.quantity,
       products.name,
       products.price AS originalPrice,
-      products.discount_rate AS discountRate
+      products.discount_rate AS discountRate,
+      images.url AS url
     FROM
       carts
     LEFT JOIN products ON products.id = carts.product_id
+    LEFT JOIN (
+      SELECT 
+        product_images.product_id,
+        product_images.url 
+      FROM product_images
+      WHERE product_images.order = 1
+    ) images ON images.product_id = products.id
     WHERE carts.user_id = ${userId}
     ;
   `);
@@ -59,7 +67,7 @@ const updateCartItem = async (id, updatedQuantity) => {
     WHERE id=${id}
   ;
   `)
-}
+};
 
 module.exports = {
   getCartByUserId,
