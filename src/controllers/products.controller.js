@@ -58,6 +58,7 @@ const getProductDetail = async (req, res) => {
    });
 };
 
+
 const getSpecialPriceProduct = async (req, res) => {
   const product = await productsService.getSpecialPriceProduct();
   return res.status(200).json({ message: "querySuccess", data: product });

@@ -9,7 +9,7 @@ const getProductList = async (
   limit
 ) => {
   const orderingQuery = await builder.ordering(sort);
-
+  console.log(category);
   const categorizingQuery = await builder.categorizing(category);
   const product = await productsModel.productList(
     userId,
@@ -51,6 +51,8 @@ const getBestProduct = async (category, sort) => {
   });
 };
 
+  return product;
+};
 const getProductDetail = async (productId) => {
   if (!productId) {
     throwError(400, "KEY_ERROR");
@@ -65,6 +67,7 @@ const getSpecialPriceProduct = async () => {
   const [product] = await productsModel.getSpecialPriceProduct();
   product.price = Math.ceil(product.originalPrice * (1 - product.discountRate / 100));
   return product;
+
 };
 
 module.exports = {
@@ -74,3 +77,4 @@ module.exports = {
   getProductDetail,
   getSpecialPriceProduct,
 };
+

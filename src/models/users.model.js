@@ -20,6 +20,7 @@ const createUser = async (name, email, hashedPw, phoneNumber) => {
 async function getUserByEmail(email) {
   const users = await AppDataSource.query(`
     SELECT
+      id,
       email,
       pw AS password
     FROM
