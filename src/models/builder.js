@@ -1,5 +1,4 @@
 const { AppDataSource } = require("./data-source");
-
 const categorizing = async (category) => {
   if (!isNaN(category)) {
     return ` WHERE products.category_id=${category}`;
@@ -16,6 +15,7 @@ const categorizing = async (category) => {
       return ` WHERE products.category_id IN (1,2,3,4,5,6,7)`;
   }
 };
+
 const ordering = async (sort) => {
   switch (sort) {
     case "-price":

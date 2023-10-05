@@ -29,7 +29,11 @@ const productList = async (
     products.price - (products.price * (products.discount_rate / 100)) AS price,
     products.price AS originalPrice,
     products.discount_rate AS discountRate,
-    COUNT(likes.product_id) AS likeNumber,
+    (
+      SELECT COUNT(likes.user_id)
+      FROM likes
+      WHERE likes.product_id = products.id
+  ) AS likeNumber,
     (
         SELECT COUNT(reviews.product_id)
         FROM reviews
@@ -50,7 +54,6 @@ const productList = async (
     LEFT JOIN product_types ON products.product_type_id = product_types.id`;
 
   query += categorizingQuery;
-
   if (product_type) {
     const teasorting = product_type.split(",").map((cat) => parseInt(cat)); // 쉼표로 구분된 카테고리를 배열로 분할
     query += ` AND products.product_type_id IN (${teasorting.join(",")})`;
@@ -84,7 +87,6 @@ const totalProduct = async (categorizingQuery, product_type) => {
   if (!product_type) {
     query += ` AND (products.product_type_id IN (1, 2, 3, 4) OR products.product_type_id IS NULL OR products.product_type_id = '')`;
   }
-  // console.log(query);
   const product = await AppDataSource.query(query);
   return product.length;
 };
@@ -92,6 +94,7 @@ const totalProduct = async (categorizingQuery, product_type) => {
 const getBestProduct = async (category, orderingQuery) => {
   let query = `SELECT
     products.id AS id,
+    products.name AS name,
     (
       SELECT JSON_ARRAYAGG(
           JSON_OBJECT(
@@ -132,14 +135,14 @@ const getBestProduct = async (category, orderingQuery) => {
     ${orderingQuery}
     limit 12 offset 0;`;
   }
-
   const product = await AppDataSource.query(query);
-
   return product;
 };
 
 const getProductDetail = async (productId) => {
-  const data = await AppDataSource.query(`SELECT * FROM products WHERE id=${productId};`);
+  const data = await AppDataSource.query(
+    `SELECT * FROM products WHERE id=${productId};`
+  );
   return data;
 };
 
@@ -189,3 +192,4 @@ module.exports = {
   getProductDetail,
   getSpecialPriceProduct,
 };
+
