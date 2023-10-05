@@ -162,10 +162,37 @@ async function getProductById(productId) {
   return products[0];
 }
 
+const getSpecialPriceProduct = async () => {
+  const product = await AppDataSource.query(`
+    SELECT 
+      products.name,
+      products.price AS originalPrice,
+      products.discount_rate AS discountRate,
+      images.url
+    FROM
+      products
+    LEFT JOIN (
+      SELECT
+        *
+      FROM
+        product_images
+      WHERE
+        product_images.order = 1
+    ) images ON images.product_id = products.id
+    WHERE products.quantity > 0
+    ORDER BY products.discount_rate DESC, quantity DESC
+    LIMIT 1
+    ;
+  `);
+  return product;
+}
+
 module.exports = {
   productList,
   totalProduct,
   getBestProduct,
   getProductById,
   getProductDetail,
+  getSpecialPriceProduct,
 };
+

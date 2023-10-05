@@ -2,18 +2,18 @@ const { AppDataSource } = require("./data-source");
 
 const createLike = async (userId, productId) => {
   await AppDataSource.query(`
-  INSERT INTO likes
-    (user_id, product_id)
-  VALUES
-    ('${userId}', '${productId}')
+    INSERT INTO likes
+      (user_id, product_id)
+    VALUES
+      ('${userId}', '${productId}')
   ;
   `);
 };
 
 const deleteLike = async (userId, productId) => {
   await AppDataSource.query(`
-  DELETE FROM likes
-  WHERE user_id = '${userId}' AND product_id = '${productId}'
+    DELETE FROM likes
+    WHERE user_id = '${userId}' AND product_id = '${productId}'
   ;
   `);
 };
