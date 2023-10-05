@@ -8,9 +8,6 @@ const productList = async (
   categorizingQuery,
   orderingQuery
 ) => {
-  console.log(categorizingQuery);
-  console.log(orderingQuery);
-  console.log(product_type);
   let input = 0;
   if (userId) {
     input = userId;
