@@ -50,9 +50,12 @@ const getBestProduct = async (req, res) => {
 };
 
 const getProductDetail = async (req, res) => {
-  const productId = req.params.product_id;
+  const productId = req.params.productId;
   const data = await productsService.getProductDetail(productId);
-  return res.status(200).json({ data });
+  return res.status(200).json({ 
+    message: "querySuccess",
+    data: data
+   });
 };
 
 const getSpecialPriceProduct = async (req, res) => {

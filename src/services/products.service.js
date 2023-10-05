@@ -56,6 +56,7 @@ const getProductDetail = async (productId) => {
     throwError(400, "KEY_ERROR");
   }
 
+
   const data = await productsModel.getProductDetail(productId);
   return data;
 };

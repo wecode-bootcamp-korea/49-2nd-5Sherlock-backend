@@ -13,7 +13,7 @@ productsRouter.get("/", productsController.getProduct);
 productsRouter.get("/bestProduct", productsController.getBestProduct);
 productsRouter.get("/specialPriceProduct", productsController.getSpecialPriceProduct);
 
-productsRouter.get("/:product_id", productsController.getProductDetail);
+productsRouter.get("/:productId", productsController.getProductDetail);
 
 productsRouter.post("/:productId/likes", likesController.createLike);
 productsRouter.delete("/:productId/likes", likesController.deleteLike);
