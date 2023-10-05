@@ -1,5 +1,6 @@
-const { ordersModel } = require("../models");
-// const { throwError } = require("../utils/throwError");
+const { ordersModel, usersModel, productsModel } = require("../models");
+const { checkEmptyValues } = require("../utils/checkEmptyValues");
+const { throwError } = require("../utils/throwError");
 
 const createOrder = async (
   userId,
@@ -70,6 +71,42 @@ const createOrder = async (
   return result;
 };
 
+const checkoutOrder = async (userId, items) => {
+  checkEmptyValues(userId, ...items);
+
+  // is user exists
+  const user = await usersModel.getUserOrderData(userId);
+
+  if (!user) throwError(404, "USER_NOT_FOUND");
+
+  const ids = [];
+  const quantities = [];
+  items.map(item => {
+    ids.push(item.id);
+    quantities.push(item.quantitiy);
+  });
+
+  // are products exist
+  const products = await productsModel.getProductsByIds(ids);
+
+  if (products.length !== ids.length) throwError(404, "CONTENT_NOT_FOUND");
+
+  products.map(product => {
+    if (product.stockQuantity === 0) throwError(400, "CONTENT_NOT_FOUND");
+  });
+  
+  // get item  info
+  products.map(product => {
+    product.quantity = quantities[ids.indexOf(product.id)];
+  });
+
+  return {
+    ...user,
+    products: products,
+  };
+};
+
 module.exports = {
   createOrder,
+  checkoutOrder,
 };

@@ -204,6 +204,23 @@ const getSpecialPriceProduct = async () => {
     ;
   `);
   return product;
+
+}
+
+const getProductsByIds = async (ids) => {
+  const products = await AppDataSource.query(`
+    SELECT
+      id AS productId,
+      name,
+      price AS originalPrice,
+      discount_rate AS discountRate,
+      quantity AS stockQuantity
+    FROM
+      products
+    WHERE id IN (${ids.join(",")})
+    ;
+  `);
+  return products;  
 }
 
 module.exports = {
@@ -213,5 +230,6 @@ module.exports = {
   getProductById,
   getProductDetail,
   getSpecialPriceProduct,
+  getProductsByIds,
 };
 

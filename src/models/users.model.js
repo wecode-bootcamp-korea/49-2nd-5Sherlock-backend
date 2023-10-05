@@ -62,6 +62,7 @@ const getUserOrderData = async (userId)=> {
     destinations ON users.default_destination = destinations.id
   WHERE
     users.id = ${userId}
+  ;
 `);
     return users[0];
 };
