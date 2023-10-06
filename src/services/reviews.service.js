@@ -1,6 +1,7 @@
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
 const { checkExistingProductById } = require("./productsUtils/products.util");
 const { reviewsModel } = require("../models");
+const { throwError } = require("../utils/throwError");
 
 const getReviews = async (productId, queryParams) => {
   checkEmptyValues(productId);
