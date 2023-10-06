@@ -222,3 +222,6 @@ db/schema.sql
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,macos,node,visualstudiocode,dotenv
 
+images_dump.sql
+products_dump.sql
+reviews.sql
