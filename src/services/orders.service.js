@@ -1,4 +1,4 @@
-const { ordersModel, usersModel, productsModel } = require("../models");
+const { ordersModel, usersModel, productsModel, destinationsModel } = require("../models");
 const { checkEmptyValues } = require("../utils/checkEmptyValues");
 const { throwError } = require("../utils/throwError");
 
@@ -79,6 +79,8 @@ const checkoutOrder = async (userId, items) => {
 
   if (!user) throwError(404, "USER_NOT_FOUND");
 
+  const defaultDestination = await destinationsModel.getDefaultAddress(userId);
+
   const ids = [];
   const quantities = [];
   items.map(item => {
@@ -102,6 +104,7 @@ const checkoutOrder = async (userId, items) => {
 
   return {
     ...user,
+    ...defaultDestination,
     products: products,
   };
 };

@@ -3,7 +3,7 @@ const { usersService } = require("../services");
 const signUp = async (req, res) => {
   try {
     const { password, email, name, phoneNumber } = req.body;
-    const complete = await usersService.signUp(
+    await usersService.signUp(
       name,
       email,
       password,

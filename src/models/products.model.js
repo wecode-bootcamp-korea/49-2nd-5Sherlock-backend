@@ -140,7 +140,7 @@ const getBestProduct = async (category, orderingQuery) => {
 };
 
 const getProductDetail = async (productId) => {
-  const data = await AppDataSource.query(`
+  const [data] = await AppDataSource.query(`
     SELECT
       products.id,
       products.name,
@@ -158,13 +158,12 @@ const getProductDetail = async (productId) => {
       categories.name AS categoryName,
       product_images.url AS productImages,
       IF(DATEDIFF(NOW(), products.created_at) < 30, "true", "false") AS isNew
-    FROM 
-      products 
+    FROM
+      products
     LEFT JOIN categories ON products.category_id = categories.id
     LEFT JOIN product_images ON products.id = product_images.product_id
-    WHERE products.id = ${productId}
+    WHERE product_images.order=1 AND products.id = ${productId}
     ;`);
-
   return data;
 };
 
@@ -184,6 +183,7 @@ async function getProductById(productId) {
 const getSpecialPriceProduct = async () => {
   const product = await AppDataSource.query(`
     SELECT 
+      products.id,
       products.name,
       products.price AS originalPrice,
       products.discount_rate AS discountRate,

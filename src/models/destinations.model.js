@@ -15,7 +15,7 @@ const getAddress = async (userId) => {
         user_id = "${userId}"
     ;
   `);
-  return data; // data = [{id}, {address}, {addressName}, {receiverName}, {receiverPhoneNumber}]
+  return data; 
 };
 
 const createAddress = async (address,addressName,receiverName,receiverPhoneNumber,userId) => {
@@ -27,7 +27,25 @@ const createAddress = async (address,addressName,receiverName,receiverPhoneNumbe
     ;`);
 }
 
+const getDefaultAddress = async (userId) => {
+  const [data] = await AppDataSource.query(`
+    SELECT 
+      users.id,
+      destinations.address,
+      destinations.address_name AS addressName,
+      destinations.receiver_name AS receiverName,
+      destinations.receiver_phone_number AS receiverPhoneNumber
+    FROM 
+      destinations
+    LEFT JOIN users ON users.default_destination = destinations.id
+    WHERE 
+      users.id = "${userId}"
+    ;
+  `);
+  return data; 
+};
 module.exports = {
   getAddress,
   createAddress,
+  getDefaultAddress,
 };

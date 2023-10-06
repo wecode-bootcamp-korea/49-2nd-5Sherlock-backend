@@ -1,4 +1,5 @@
 const { productsModel, builder } = require("../models");
+const { throwError } = require("../utils/throwError");
 
 const getProductList = async (
   userId,
@@ -9,7 +10,6 @@ const getProductList = async (
   limit
 ) => {
   const orderingQuery = await builder.ordering(sort);
-  console.log(category);
   const categorizingQuery = await builder.categorizing(category);
   const product = await productsModel.productList(
     userId,
